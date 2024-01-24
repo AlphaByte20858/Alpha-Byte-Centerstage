@@ -13,16 +13,11 @@ public class testes2 extends OpMode {
     Servo GCL;
 
     public void init() {
-
-
         CL = hardwareMap.get(DcMotor.class, "CLIMB");
         GCL = hardwareMap.get(Servo.class, "GarraCLIMB");
 
         CL.setDirection(DcMotor.Direction.FORWARD);
         GCL.setDirection(Servo.Direction.REVERSE);
-
-
-
     }
 
     public void loop() {

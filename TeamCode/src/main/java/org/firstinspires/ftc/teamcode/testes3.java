@@ -48,6 +48,7 @@ public class testes3 extends LinearOpMode {
 
             Motor3.setPower(gamepad1.left_stick_y);
             valor_encoder3 = Motor0.getCurrentPosition();
+
         }
 
     }

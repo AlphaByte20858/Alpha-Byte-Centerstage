@@ -71,6 +71,7 @@ public class AmistosoTeleOP extends OpMode {
         drone();
         ITK();
     }
+
     public void move() {
 
         // Criação das váriaveis de força para a movimentação
@@ -154,5 +155,4 @@ public class AmistosoTeleOP extends OpMode {
             InTake.setPower(0);
         }
     }
-
 }
