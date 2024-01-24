@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
@@ -95,7 +94,6 @@ public class AmistosoTeleOP extends OpMode {
         double MDTp = (axial + lateral - yaw / denominador);
 
         allMotorsPower(MEFp * 0.7, MDFp * 0.7, METp * 0.7, MDTp * 0.7);
-
     }
 
     public void allMotorsPower(double paMEF, double paMDF, double paMET, double paMDT) {

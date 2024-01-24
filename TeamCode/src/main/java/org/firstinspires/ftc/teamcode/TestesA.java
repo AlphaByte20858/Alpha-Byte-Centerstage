@@ -6,52 +6,28 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoControllerEx;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp (name= "TestesA", group = "OpMode")
 public class TestesA extends OpMode {
-    DcMotorEx ITK, Linear;
-    Servo garra;
+    Servo SD;
+    ServoControllerEx teste;
     public void init() {
-        ITK = hardwareMap.get(DcMotorEx.class, "Intake");
-        Linear = hardwareMap.get(DcMotorEx.class, "Linear");
-        garra = hardwareMap.get(Servo.class, "garra");
-
-        ITK.setDirection(DcMotorEx.Direction.REVERSE);
-        Linear.setDirection(DcMotorEx.Direction.REVERSE);
-        garra.setDirection(Servo.Direction.REVERSE);
-
+        SD = hardwareMap.get(Servo.class, "SD");
+        teste = hardwareMap.get(ServoControllerEx.class, "SD2");
     }
 
     @Override
     public void loop() {
-        Flinear();
-        INTAKE();
-        Garra();
-    }
-
-    public void INTAKE(){
-        ITK.setPower(gamepad1.right_trigger - gamepad1.left_trigger);
-    }
-
-    public void Flinear() {
-        if (gamepad1.right_bumper)  {
-            Linear.setPower(1);
+        ElapsedTime viao = new ElapsedTime();
+        if (gamepad2.left_bumper){
+            SD.setPosition(0.2);
+            viao.startTime();
         }
-        else if (gamepad1.left_bumper) {
-            Linear.setPower(-1);
-        }
-        else {
-            Linear.setPower(0);
-        }
-    }
-
-    public void Garra(){
-        if (gamepad1.y){
-            garra.setPosition(0.19);
-        }
-        else if (gamepad1.x){
-            garra.setPosition(0.84);
+        if (viao.seconds() > 5){
+                SD.setPosition(0);
         }
     }
 }
