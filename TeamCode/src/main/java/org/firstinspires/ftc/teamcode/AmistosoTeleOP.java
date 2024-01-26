@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -38,8 +39,8 @@ public class AmistosoTeleOP extends OpMode {
         GCL = hardwareMap.get(Servo.class, "GCL");
 
         Motor0.setDirection(DcMotorEx.Direction.REVERSE);
-        Motor1.setDirection(DcMotorEx.Direction.REVERSE);
-        Motor2.setDirection(DcMotorEx.Direction.FORWARD);
+        Motor1.setDirection(DcMotorEx.Direction.FORWARD);
+        Motor2.setDirection(DcMotorEx.Direction.REVERSE);
         Motor3.setDirection(DcMotorEx.Direction.FORWARD);
         Linear.setDirection(DcMotorEx.Direction.REVERSE);
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
