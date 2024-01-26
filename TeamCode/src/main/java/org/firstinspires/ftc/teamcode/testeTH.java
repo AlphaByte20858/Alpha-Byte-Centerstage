@@ -1,48 +1,42 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.tensorflow.lite.task.vision.core.BaseVisionTaskApi;
 
 @Autonomous (name = "Thiago", group = "LinearOpMode")
 public class testeTH extends LinearOpMode {
 
-    DcMotorEx M0, M1, M2, M3, Linear, Intake;
-    ServoImplEx garra, SD;
+    IMU imu;
+    TFObjectDetector sla;
 
     public void runOpMode() {
+        ElapsedTime runtime = new ElapsedTime();
+        imu = hardwareMap.get(IMU.class, "imu");
+        sla = hardwareMap.get(TFObjectDetector.class, "sla");
 
-        M0 = hardwareMap.get(DcMotorEx.class, "MEF");
-        M1 = hardwareMap.get(DcMotorEx.class, "MDF");
-        M2 = hardwareMap.get(DcMotorEx.class, "MET");
-        M3 = hardwareMap.get(DcMotorEx.class, "MDT");
-        Linear = hardwareMap.get(DcMotorEx.class, "Linear");
-        Intake = hardwareMap.get(DcMotorEx.class, "Intake");
-        garra = hardwareMap.get(ServoImplEx.class, "garra");
-        SD = hardwareMap.get(ServoImplEx.class, "SD");
+        telemetry.addData("statucs", "inicializate");
+        telemetry.update();
 
-        M0.setDirection(DcMotorEx.Direction.REVERSE);
-        M1.setDirection(DcMotorEx.Direction.REVERSE);
-        M2.setDirection(DcMotorEx.Direction.REVERSE);
-        M3.setDirection(DcMotorEx.Direction.REVERSE);
-        Linear.setDirection(DcMotorSimple.Direction.REVERSE);
-        Intake.setDirection(DcMotorSimple.Direction.REVERSE);
-        garra.setDirection(ServoImplEx.Direction.REVERSE);
-        SD.setDirection(ServoImplEx.Direction.REVERSE);
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+
+        sla.activate();
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
 
         waitForStart();
-
-        while (opModeIsActive()){
-
-
+        runtime.reset();
         }
-
-    }
-
 }
 

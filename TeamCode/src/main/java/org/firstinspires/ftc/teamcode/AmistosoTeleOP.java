@@ -8,9 +8,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
@@ -44,10 +44,10 @@ public class AmistosoTeleOP extends OpMode {
         Motor3.setDirection(DcMotorEx.Direction.FORWARD);
         Linear.setDirection(DcMotorEx.Direction.REVERSE);
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
-        garra.setDirection(Servo.Direction.REVERSE);
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
-        SD.setDirection(Servo.Direction.REVERSE);
-        GCL.setDirection(Servo.Direction.REVERSE);
+        garra.setDirection(ServoImplEx.Direction.REVERSE);
+        SD.setDirection(ServoImplEx.Direction.REVERSE);
+        GCL.setDirection(ServoImplEx.Direction.REVERSE);
 
         modemoto(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         modemoto(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -78,7 +78,7 @@ public class AmistosoTeleOP extends OpMode {
 
         double axial, lateral, yaw;
 
-        axial = gamepad1.left_stick_y;
+        axial = gamepad1.right_trigger - gamepad1.left_trigger;
         lateral = gamepad1.left_stick_x;
         yaw = gamepad1.right_stick_x;
 
@@ -127,10 +127,11 @@ public class AmistosoTeleOP extends OpMode {
 
     //garra
     public void RAW(){
-        if (gamepad2.a){
+        double gara = garra.getPosition();
+        if (gamepad2.a && gara > 0.5){
             garra.setPosition(0.19);
         }
-        else if (gamepad2.y){
+        else if (gamepad2.a && gara < 0.5){
             garra.setPosition(0.84);
         }
     }
@@ -138,11 +139,11 @@ public class AmistosoTeleOP extends OpMode {
     //sistema de lançamento do avião
     public void drone(){
         if (gamepad2.left_bumper){
-            SD.setPosition(0.2);
+            SD.setPosition(0);
             viao.startTime();
         }
         if (viao.seconds() > 5){
-            SD.setPosition(0);
+            SD.setPosition(0.5);
         }
     }
 
