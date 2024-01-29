@@ -37,6 +37,6 @@ public class testeTH extends LinearOpMode {
 
         waitForStart();
         runtime.reset();
-        }
+    }
 }
 

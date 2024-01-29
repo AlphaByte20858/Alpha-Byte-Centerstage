@@ -25,8 +25,8 @@ public class TestesA extends OpMode {
     public void loop() {
 
         if (gamepad2.left_bumper ){
-                SD.setPosition(0.2);
-            }
+            SD.setPosition(0.2);
+        }
         else if(gamepad2.right_bumper) {
 
             SD.setPosition(0);

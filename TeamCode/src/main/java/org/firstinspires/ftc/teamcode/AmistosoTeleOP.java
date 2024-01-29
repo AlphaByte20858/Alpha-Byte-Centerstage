@@ -23,8 +23,7 @@ public class AmistosoTeleOP extends OpMode {
     DcMotorEx Motor0, Motor1, Motor2, Motor3, MCL, InTake, Linear;
     IMU imu;
     Servo garra, SD, GCL;
-    public ElapsedTime viao = new ElapsedTime();
-
+    Boolean viao = false;
     public void init() {
 
         Motor0 = hardwareMap.get(DcMotorEx.class, "MEF");
@@ -103,13 +102,13 @@ public class AmistosoTeleOP extends OpMode {
         Motor2.setPower(paMET);
         Motor3.setPower(paMDT);
     }
-
     public void modemoto(DcMotor.RunMode mode) {
         Motor0.setMode(mode);
         Motor1.setMode(mode);
         Motor2.setMode(mode);
         Motor3.setMode(mode);
     }
+
     //sistema linear
     public void Flinear() {
         double linearD = gamepad2.right_trigger;
@@ -138,12 +137,13 @@ public class AmistosoTeleOP extends OpMode {
 
     //sistema de lançamento do avião
     public void drone(){
-        if (gamepad2.left_bumper){
+        if (gamepad2.left_bumper && viao == false){
             SD.setPosition(0);
-            viao.startTime();
+            viao = true;
         }
-        if (viao.seconds() > 5){
+        if (gamepad2.left_bumper && viao == true){
             SD.setPosition(0.5);
+            viao = false;
         }
     }
 
