@@ -13,9 +13,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 @TeleOp (name= "TestesA", group = "OpMode")
 public class TestesA extends OpMode {
     Servo SD;
-    Boolean IsOpen = false;
-    ElapsedTime viao = new ElapsedTime();
-
 
     public void init() {
         SD = hardwareMap.get(Servo.class, "SD");
@@ -30,16 +27,9 @@ public class TestesA extends OpMode {
         else if(gamepad2.right_bumper) {
 
             SD.setPosition(0);
-            IsOpen = true;
-            viao.reset();
         }
         if (gamepad2.a){
             SD.setPosition(0.5);
-        }
-
-
-        if (IsOpen && viao.seconds() > 1){
-            SD.setPosition(-0.3);
         }
     }
 }

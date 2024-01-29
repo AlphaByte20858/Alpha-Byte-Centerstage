@@ -124,7 +124,7 @@ public class CameraTeste extends LinearOpMode {
                 .setIsModelTensorFlow2(true)
                 .setIsModelQuantized(true)
                 .setModelInputSize(300)
-                .setModelAspectRatio(16.0 / 9.0)
+                .setModelAspectRatio(16.0/ 9.0)
 
                 .build();
 
