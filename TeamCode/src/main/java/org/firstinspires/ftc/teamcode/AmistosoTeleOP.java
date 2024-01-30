@@ -12,41 +12,45 @@ import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 @TeleOp (name = "AmistosoTeleOP", group = "OpMode")
-
 public class AmistosoTeleOP extends OpMode {
 
-    DcMotorEx Motor0, Motor1, Motor2, Motor3, MCL, InTake, Linear;
+    DcMotorEx MEF, MDF, MET, MDT, MCL, MIT, MLS;
     IMU imu;
-    Servo garra, SD, GCL;
-    Boolean viao = false;
+    Servo sArm, sDrone, sClaw;
+    Boolean isDroneOpen = true;
+    int lastPos;
+    ElapsedTime droneTime = new ElapsedTime();
+    ElapsedTime servoTime = new ElapsedTime();
     public void init() {
 
-        Motor0 = hardwareMap.get(DcMotorEx.class, "MEF");
-        Motor1 = hardwareMap.get(DcMotorEx.class, "MDF");
-        Motor2 = hardwareMap.get(DcMotorEx.class, "MET");
-        Motor3 = hardwareMap.get(DcMotorEx.class, "MDT");
-        Linear = hardwareMap.get(DcMotorEx.class, "Linear");
+        MEF = hardwareMap.get(DcMotorEx.class, "MEF");
+        MDF = hardwareMap.get(DcMotorEx.class, "MDF");
+        MET = hardwareMap.get(DcMotorEx.class, "MET");
+        MDT = hardwareMap.get(DcMotorEx.class, "MDT");
+        MLS = hardwareMap.get(DcMotorEx.class, "MLS");
         MCL = hardwareMap.get(DcMotorEx.class, "MCL");
-        InTake = hardwareMap.get(DcMotorEx.class, "Intake");
-        garra = hardwareMap.get(Servo.class, "garra");
-        SD = hardwareMap.get(Servo.class, "SD");
-        GCL = hardwareMap.get(Servo.class, "GCL");
+        MIT = hardwareMap.get(DcMotorEx.class, "MIT");
+        sArm = hardwareMap.get(Servo.class, "sArm");
+        sDrone = hardwareMap.get(Servo.class, "sDrone");
+        sClaw = hardwareMap.get(Servo.class, "sClaw");
 
-        Motor0.setDirection(DcMotorEx.Direction.REVERSE);
-        Motor1.setDirection(DcMotorEx.Direction.FORWARD);
-        Motor2.setDirection(DcMotorEx.Direction.REVERSE);
-        Motor3.setDirection(DcMotorEx.Direction.FORWARD);
-        Linear.setDirection(DcMotorEx.Direction.REVERSE);
+        MEF.setDirection(DcMotorEx.Direction.REVERSE);
+        MDF.setDirection(DcMotorEx.Direction.FORWARD);
+        MET.setDirection(DcMotorEx.Direction.REVERSE);
+        MDT.setDirection(DcMotorEx.Direction.FORWARD);
+
+        MLS.setDirection(DcMotorEx.Direction.REVERSE);
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
-        garra.setDirection(ServoImplEx.Direction.REVERSE);
-        SD.setDirection(ServoImplEx.Direction.REVERSE);
-        GCL.setDirection(ServoImplEx.Direction.REVERSE);
+        sArm.setDirection(Servo.Direction.REVERSE);
+        sDrone.setDirection(Servo.Direction.FORWARD);
+        sClaw.setDirection(Servo.Direction.REVERSE);
 
         modemoto(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         modemoto(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -60,6 +64,10 @@ public class AmistosoTeleOP extends OpMode {
 
         imu.initialize(new IMU.Parameters(orientationOnRobot));
 
+        servoTime.startTime();
+        droneTime.startTime();
+
+        MLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -77,9 +85,9 @@ public class AmistosoTeleOP extends OpMode {
 
         double axial, lateral, yaw;
 
-        axial = gamepad1.right_trigger - gamepad1.left_trigger;
+        axial = gamepad1.left_trigger - gamepad1.right_trigger;
         lateral = gamepad1.left_stick_x;
-        yaw = gamepad1.right_stick_x;
+        yaw = gamepad1.right_stick_x * 0.7;
 
         // Criação de váriaveis par8 a movimentação em 8 direções
         double denominador = Math.max(Math.abs(axial) + Math.abs(lateral) + Math.abs(yaw), 1);
@@ -93,66 +101,64 @@ public class AmistosoTeleOP extends OpMode {
         double METp = (axial - lateral + yaw / denominador);
         double MDTp = (axial + lateral - yaw / denominador);
 
-        allMotorsPower(MEFp * 0.7, MDFp * 0.7, METp * 0.7, MDTp * 0.7);
+        allMotorsPower(-MEFp * 0.7, -MDFp * 0.7, METp * 0.7, MDTp * 0.7);
     }
 
     public void allMotorsPower(double paMEF, double paMDF, double paMET, double paMDT) {
-        Motor0.setPower(paMEF);
-        Motor1.setPower(paMDF);
-        Motor2.setPower(paMET);
-        Motor3.setPower(paMDT);
+        MEF.setPower(paMEF);
+        MDF.setPower(paMDF);
+        MET.setPower(paMET);
+        MDT.setPower(paMDT);
     }
     public void modemoto(DcMotor.RunMode mode) {
-        Motor0.setMode(mode);
-        Motor1.setMode(mode);
-        Motor2.setMode(mode);
-        Motor3.setMode(mode);
+        MEF.setMode(mode);
+        MDF.setMode(mode);
+        MET.setMode(mode);
+        MDT.setMode(mode);
     }
 
     //sistema linear
     public void Flinear() {
-        double linearD = gamepad2.right_trigger;
-        double linearE = gamepad2.left_trigger;
+        double powerLinear = 0.6;
 
-        if (gamepad2.right_trigger > 0.1) {
-            Linear.setPower(linearD);
-        } else if (gamepad2.left_trigger > 0.1) {
-            Linear.setPower(linearE);
+        if (gamepad2.right_bumper) {
+            MLS.setPower(powerLinear);
+        }
+        else if (gamepad2.left_bumper) {
+            MLS.setPower(-powerLinear);
         }
         else {
-            Linear.setPower(0);
+            MLS.setPower(0);
         }
     }
 
     //garra
     public void RAW(){
-        double gara = garra.getPosition();
-        if (gamepad2.a && gara > 0.5){
-            garra.setPosition(0.19);
+        double clawPos = sArm.getPosition();
+        if (gamepad2.a && clawPos > 0.5){
+            sArm.setPosition(0.19);
         }
-        else if (gamepad2.a && gara < 0.5){
-            garra.setPosition(0.84);
+        else if (gamepad2.a && clawPos < 0.5){
+            sArm.setPosition(0.84);
         }
     }
 
     //sistema de lançamento do avião
     public void drone(){
-        if (gamepad2.left_bumper && viao == false){
-            SD.setPosition(0);
-            viao = true;
+        if (gamepad2.left_bumper && isDroneOpen == true){
+            sDrone.setPosition(0);
+            isDroneOpen = false;
         }
-        if (gamepad2.left_bumper && viao == true){
-            SD.setPosition(0.5);
-            viao = false;
+        if (gamepad2.left_bumper && isDroneOpen == false){
+            sDrone.setPosition(0.2);
+            isDroneOpen = true;
+        }
+        if (droneTime.seconds() > 1 && isDroneOpen == true){
+            sDrone.setPosition(0.5);
         }
     }
 
     public void ITK() {
-        if(gamepad1.a){
-            InTake.setPower(1);
-        }
-        else{
-            InTake.setPower(0);
-        }
+        MIT.setPower(gamepad2.right_trigger - gamepad2.left_trigger);
     }
 }

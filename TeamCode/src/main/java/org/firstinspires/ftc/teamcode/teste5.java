@@ -1,18 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 @Autonomous (name = "Automonos teste", group = "LinearOpMode")
 public class teste5 extends LinearOpMode {
 
-    DcMotorEx M0, M1, M2, M3, Linear, Intake = null;
-    ServoImplEx garra, SD = null;
+    DcMotorEx MET, MDT, MEF, MDF, MLS, MIT = null;
+    ServoImplEx sArm, sDrone = null;
 
     static final double COUNS_PER_MOTOR_REV = 560;
     static final double DRIVE_GEAR_REDUCTION = 1.0;
@@ -24,30 +22,30 @@ public class teste5 extends LinearOpMode {
         telemetry.addData("stats", "Initialize");
         telemetry.update();
 
-        M0 = hardwareMap.get(DcMotorEx.class, "MEF");
-        M1 = hardwareMap.get(DcMotorEx.class, "MDF");
-        M2 = hardwareMap.get(DcMotorEx.class, "MET");
-        M3 = hardwareMap.get(DcMotorEx.class, "MDT");
-        Linear = hardwareMap.get(DcMotorEx.class, "Linear");
-        Intake = hardwareMap.get(DcMotorEx.class, "Intake");
-        garra = hardwareMap.get(ServoImplEx.class, "garra");
-        SD = hardwareMap.get(ServoImplEx.class, "SD");
+        MET = hardwareMap.get(DcMotorEx.class, "MEF");
+        MDT = hardwareMap.get(DcMotorEx.class, "MDF");
+        MEF = hardwareMap.get(DcMotorEx.class, "MET");
+        MDF = hardwareMap.get(DcMotorEx.class, "MDT");
+        MLS = hardwareMap.get(DcMotorEx.class, "MLS");
+        MIT = hardwareMap.get(DcMotorEx.class, "MIT");
+        sArm = hardwareMap.get(ServoImplEx.class, "garra");
+        sDrone = hardwareMap.get(ServoImplEx.class, "SD");
 
-        M0.setDirection(DcMotorEx.Direction.REVERSE);
-        M1.setDirection(DcMotorEx.Direction.FORWARD);
-        M2.setDirection(DcMotorEx.Direction.REVERSE);
-        M3.setDirection(DcMotorEx.Direction.FORWARD);
-        Linear.setDirection(DcMotorEx.Direction.REVERSE);
-        Intake.setDirection(DcMotorEx.Direction.REVERSE);
-        garra.setDirection(ServoImplEx.Direction.REVERSE);
-        SD.setDirection(ServoImplEx.Direction.REVERSE);
+        MET.setDirection(DcMotorEx.Direction.REVERSE);
+        MDT.setDirection(DcMotorEx.Direction.FORWARD);
+        MEF.setDirection(DcMotorEx.Direction.REVERSE);
+        MDF.setDirection(DcMotorEx.Direction.FORWARD);
+        MLS.setDirection(DcMotorEx.Direction.REVERSE);
+        MIT.setDirection(DcMotorEx.Direction.REVERSE);
+        sArm.setDirection(ServoImplEx.Direction.REVERSE);
+        sDrone.setDirection(ServoImplEx.Direction.REVERSE);
 
-        M0.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        M1.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        M2.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        M3.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Linear.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        Intake.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MET.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MDT.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MEF.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MDF.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MLS.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        MIT.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
 
         waitForStart();
 
@@ -58,56 +56,56 @@ public class teste5 extends LinearOpMode {
 
     public void addSetpoint(int SetPoint) {
 
-        int SetPoint0 = M0.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
-        M0.setTargetPosition(SetPoint0);
-        M0.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        M0.setPower(1);
+        int SetPoint0 = MET.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
+        MET.setTargetPosition(SetPoint0);
+        MET.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        MET.setPower(1);
 
-        int SetPoint1 = M1.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
-        M1.setTargetPosition(SetPoint1);
-        M1.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        M1.setPower(1);
+        int SetPoint1 = MDT.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
+        MDT.setTargetPosition(SetPoint1);
+        MDT.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        MDT.setPower(1);
 
-        int SetPoint2 = M2.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
-        M2.setTargetPosition(SetPoint2);
-        M2.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        M2.setPower(1);
+        int SetPoint2 = MEF.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
+        MEF.setTargetPosition(SetPoint2);
+        MEF.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        MEF.setPower(1);
 
-        int SetPoint3 = M3.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
-        M3.setTargetPosition(SetPoint3);
-        M3.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-        M3.setPower(1);
+        int SetPoint3 = MDF.getCurrentPosition() + (int) (SetPoint * FatorDeConversao);
+        MDF.setTargetPosition(SetPoint3);
+        MDF.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+        MDF.setPower(1);
 
-        while (M0.isBusy()) {
-            telemetry.addData("Distancia percorrida", M0.getCurrentPosition() / FatorDeConversao);
+        while (MET.isBusy()) {
+            telemetry.addData("Distancia percorrida", MET.getCurrentPosition() / FatorDeConversao);
             telemetry.update();
         }
-        while (M1.isBusy()) {
-            telemetry.addData("Distancia percorrida", M1.getCurrentPosition() / FatorDeConversao);
+        while (MDT.isBusy()) {
+            telemetry.addData("Distancia percorrida", MDT.getCurrentPosition() / FatorDeConversao);
             telemetry.update();
         }
-        while (M2.isBusy()) {
-            telemetry.addData("Distancia percorrida", M2.getCurrentPosition() / FatorDeConversao);
+        while (MEF.isBusy()) {
+            telemetry.addData("Distancia percorrida", MEF.getCurrentPosition() / FatorDeConversao);
             telemetry.update();
         }
-        while (M3.isBusy()) {
-            telemetry.addData("Distancia percorrida", M3.getCurrentPosition() / FatorDeConversao);
+        while (MDF.isBusy()) {
+            telemetry.addData("Distancia percorrida", MDF.getCurrentPosition() / FatorDeConversao);
             telemetry.update();
         }
-        M0.setPower(0);
-        M0.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MET.setPower(0);
+        MET.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sleep(500);
 
-        M1.setPower(0);
-        M1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MDT.setPower(0);
+        MDT.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sleep(500);
 
-        M2.setPower(0);
-        M2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MEF.setPower(0);
+        MEF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sleep(500);
 
-        M3.setPower(0);
-        M3.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        MDF.setPower(0);
+        MDF.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sleep(500);
     }
 }
