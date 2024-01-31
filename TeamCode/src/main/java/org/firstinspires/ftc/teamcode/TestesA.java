@@ -13,38 +13,33 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp (name= "TestesA", group = "OpMode")
 public class TestesA extends OpMode {
-    DcMotorEx MDF, MEF, MDT, MET;
+    Servo sClaw;
 
     public void init() {
-        MDF = hardwareMap.get(DcMotorEx.class, "MDF");
-        MEF = hardwareMap.get(DcMotorEx.class, "MEF");
-        MDT = hardwareMap.get(DcMotorEx.class, "MDT");
-        MET = hardwareMap.get(DcMotorEx.class, "MET");
-        
-        MET.setDirection(DcMotorSimple.Direction.REVERSE);
-        MDT.setDirection(DcMotorSimple.Direction.FORWARD);
-        MEF.setDirection(DcMotorSimple.Direction.REVERSE);
-        MDF.setDirection(DcMotorSimple.Direction.FORWARD);
+        sClaw = hardwareMap.get(Servo.class, "sClaw");
+        sClaw.setDirection(Servo.Direction.REVERSE);
+        sClaw.setPosition(0);
     }
 
-    public void loop() {
-        if (gamepad2.a){
-            MEF.setPower(1);
+    @Override
+    public void loop(){
+        if (gamepad1.a){
+            sClaw.setPosition(0.25);
         }
-        else if (gamepad2.b){
-            MDF.setPower(1);
+        else if (gamepad1.b){
+            sClaw.setPosition(0.5);
         }
-        else if (gamepad2.x){
-            MET.setPower(1);
+        else if (gamepad1.x){
+            sClaw.setPosition(0.75);
         }
-        else if (gamepad2.y){
-            MDT.setPower(1);
+        else if (gamepad1.y){
+            sClaw.setPosition(1);
         }
-        else {
-            MDF.setPower(0);
-            MEF.setPower(0);
-            MDT.setPower(0);
-            MET.setPower(0);
+        else if (gamepad1.right_bumper){
+            sClaw.setDirection(Servo.Direction.FORWARD);
+        }
+        else if (gamepad1.left_bumper){
+            sClaw.setDirection(Servo.Direction.REVERSE);
         }
     }
 }

@@ -24,7 +24,8 @@ public class AmistosoTeleOP extends OpMode {
     IMU imu;
     Servo sArm, sDrone, sClaw;
     Boolean isDroneOpen = true;
-    int lastPos;
+    Boolean clawOpen = false;
+    ElapsedTime garraTime = new ElapsedTime();
     ElapsedTime droneTime = new ElapsedTime();
     ElapsedTime servoTime = new ElapsedTime();
     public void init() {
@@ -50,7 +51,7 @@ public class AmistosoTeleOP extends OpMode {
         MCL.setDirection(DcMotorEx.Direction.REVERSE);
         sArm.setDirection(Servo.Direction.REVERSE);
         sDrone.setDirection(Servo.Direction.FORWARD);
-        sClaw.setDirection(Servo.Direction.REVERSE);
+        sClaw.setDirection(Servo.Direction.FORWARD);
 
         modemoto(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         modemoto(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -66,8 +67,10 @@ public class AmistosoTeleOP extends OpMode {
 
         servoTime.startTime();
         droneTime.startTime();
+        garraTime.startTime();
 
         MLS.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        sArm.setPosition(0);
     }
 
     @Override
@@ -134,27 +137,30 @@ public class AmistosoTeleOP extends OpMode {
 
     //garra
     public void RAW(){
-        double clawPos = sArm.getPosition();
-        if (gamepad2.a && clawPos > 0.5){
-            sArm.setPosition(0.19);
-        }
-        else if (gamepad2.a && clawPos < 0.5){
-            sArm.setPosition(0.84);
-        }
+        if (garraTime.seconds() > 0.5)
+            if (gamepad2.a && clawOpen == false ){
+                sArm.setPosition(0.5);
+                clawOpen = true;
+            }
+
+            else if (gamepad2.a && clawOpen == true ){
+                sArm.setPosition(0);
+                clawOpen = false;
+            }
+            garraTime.reset();
     }
 
     //sistema de lançamento do avião
     public void drone(){
-        if (gamepad2.left_bumper && isDroneOpen == true){
+        if (gamepad2.y && isDroneOpen == true && droneTime.seconds() > 2){
             sDrone.setPosition(0);
             isDroneOpen = false;
+            droneTime.reset();
         }
-        if (gamepad2.left_bumper && isDroneOpen == false){
-            sDrone.setPosition(0.2);
-            isDroneOpen = true;
-        }
-        if (droneTime.seconds() > 1 && isDroneOpen == true){
+        if (gamepad2.y && isDroneOpen == false && droneTime.seconds() > 2){
             sDrone.setPosition(0.5);
+            isDroneOpen = true;
+            droneTime.reset();
         }
     }
 
